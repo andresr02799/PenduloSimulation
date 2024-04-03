@@ -1,82 +1,96 @@
 <!DOCTYPE HTML>
 <html lang="es">
+
 <head>
   <title>El Péndulo</title>
   <meta charset="utf-8">
   <link rel="stylesheet" href="./styles.css">
   <script src="script.js"></script>
 </head>
+
 <body>
   <div id="total">
-    <div id="canvas"><canvas id="cv" width=540 height=420>Este navegador no soporta CANVAS</canvas></div>
     <div id="panel">
-      <div style="top: 10px;">
-        <button id="bu1" style="background-color: #00ffff;"></button>
+
+      <h1>VIBRACIONES Y ONDAS</h1>
+
+      <div id="labelInput">
+        <label for="longitud">Longitud</label>
+        <input type="text" id="longitudInput">
+        <label>m</label>
       </div>
 
-      <div style="top: 50px;">
-        <button id="bu2" style="background-color: #ffff00;"></button>
+      <div id="labelInput">
+        <label for="gravedad">Gravedad</label>
+        <input type="text" id="ipGb">
+        <label>m/s²</label>
       </div>
 
-      <div style="top: 95px;">
+      <div id="labelInput">
+        <label for="masa">Masa</label>
+        <input type="text" id="ipMb">
+        <label>kg</label>
+      </div>
+
+      <div id="labelInput">
+        <label for="angulo">Angulo</label>
+        <input type="text" id="ipAb">
+        <label>°</label>
+      </div>
+
+      <div id="labelInput">
+        <label for="amortiguacion">Amortiguacion</label>
+        <input type="text" id="ipAm">
+        <label>°</label>
+      </div>
+
+      <div id="labelInput">
+        <label for="masaBarra">Masa Barra</label>
+        <input type="text" id="ipMasb">
+        <label>kg</label>
+      </div>
+
+      <div id="labelInput">
         <input type="checkbox" id="cbSlow" name="cbSlow" value="">
         <label for="cbSlow" id="lbSlow"></label>
       </div>
 
-      <div style="top: 130px;">
-        <span class="pos1" id="ipLa"></span>
-        <input type="text" id="ipLb">
-        <span class="pos3" id="ipLc"></span>
-      </div>
-
-      
-      <div style="top: 170px;">
-        <span class="pos1" id="ipGa"></span>
-        <input type="text" id="ipGb">
-        <span class="pos3" id="ipGc"></span>
-      </div>
-
-      <div style="top: 195px;">
-        <span class="pos1" id="ipMa"></span>
-        <input type="text" id="ipMb">
-        <span class="pos3" id="ipMc"></span>
-      </div>
-
-      <div style="top: 220px;">
-        <span class="pos1" id="ipAa"></span>
-        <input type="text" id="ipAb">
-        <span class="pos3" id="ipAc"></span>
+      <div id="divBotones">
+        <button id="bu2"></button>
+        <button id="bu1"></button>
       </div>
 
       <div style="top: 250px;">
         <input type="radio" id="rbY" name="bg" value="">
-        <label id="lbY" for="rbY" style="color: #ff0000;"></label>
+        <label id="lbY" for="rbY"></label>
       </div>
 
       <div style="top: 275px;">
         <input type="radio" id="rbV" name="bg" value="">
-        <label id="lbV" for="rbV" style="color: #ff00ff;"></label>
+        <label id="lbV" for="rbV"></label>
       </div>
 
       <div style="top: 300px;">
         <input type="radio" id="rbA" name="bg" value="">
-        <label id="lbA" for="rbA" style="color: #0000ff;"></label>
+        <label id="lbA" for="rbA"></label>
       </div>
 
       <div style="top: 325px;">
         <input type="radio" id="rbF" name="bg" value="">
-        <label id="lbF" for="rbF" style="color: #008020;"></label>
+        <label id="lbF" for="rbF"></label>
       </div>
 
       <div style="top: 350px;">
         <input type="radio" id="rbE" name="bg" value="">
-        <label id="lbE" for="rbE" style="color: #000000;"></label>
+        <label id="lbE" for="rbE"></label>
       </div>
-      
+
       <div style="top: 390px;">
         <span class="pos1" id="author"></span>
       </div>
     </div>
+    <div id="canvas"><canvas id="cv" width=540 height=420>Este navegador no soporta CANVAS</canvas></div>
   </div>
 </body>
+
 </html>

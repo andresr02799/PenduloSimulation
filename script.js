@@ -5,10 +5,8 @@ var text02 = ["Aplicar", "Pausa", "Reanudar"]; // Textos para el botón 2 (vario
 var decimalSeparator = ","; // Separador decimal
 
 // Colores utilizados en el lienzo
-var colorBackground = "#ffff00"; // Color de fondo
-var colorClock1 = "#808080"; // Color para el reloj
-var colorClock2 = "#000000"; // Color para el reloj
-var colorClock3 = "#ff0000"; // Color para el reloj
+var colorBackground = "#fff"; // Color de fondo
+var colorClock3 = "#000000"; // Color para el reloj
 var colorElongation = "#ff0000"; // Color para la elongación
 var colorVelocity = "#ff00ff"; // Color para la velocidad
 var colorAcceleration = "#0000ff"; // Color para la aceleración
@@ -57,32 +55,35 @@ function getElement(id, text) {
   return e;
 }
 
+var ax, ay; // Nuevas variables para la posición del péndulo
+
 // Función de inicio del programa
 function start() {
-  // Inicialización de variables y elementos del DOM
-  canvas = getElement("cv"); // Obtener el lienzo
-  width = canvas.width; height = canvas.height; // Establecer el ancho y alto del lienzo
-  ctx = canvas.getContext("2d"); // Obtener el contexto 2D del lienzo
+    // Inicialización de variables y elementos del DOM
+    canvas = getElement("cv"); // Obtener el lienzo
+    // Establecer el ancho y alto del lienzo para que coincida con el tamaño de la ventana del navegador
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    width = canvas.width;
+    height = canvas.height;
+    ctx = canvas.getContext("2d"); // Obtener el contexto 2D del lienzo
+    ax = width / 5; // Centrar horizontalmente el péndulo
+    ay = 30; // Posición vertical del péndulo
+    xD = (width - 200) / 2; // Centrar horizontalmente los gráficos
+    yD1 = 180; // Posición vertical del primer gráfico
+    yD2 = 165; // Posición vertical del segundo gráfico
   bu1 = getElement("bu1", "Restablecer"); // Obtener el botón 1
   bu2 = getElement("bu2", text02[0]); // Obtener el botón 2
   bu2.state = 0; // Establecer el estado inicial del botón 2
   cbSlow = getElement("cbSlow"); // Obtener la casilla de verificación de ralentización
   cbSlow.checked = false; // Desmarcar la casilla de verificación de ralentización
   getElement("lbSlow", "Ralentizar"); // Obtener el texto para la casilla de verificación de ralentización
-  getElement("ipLa", "Longitud:"); // Obtener el texto para la entrada de longitud
-  ipL = getElement("ipLb"); // Obtener la entrada de longitud
-  getElement("ipLc", "m"); // Obtener el texto para la unidad de longitud
+  ipL = getElement("longitudInput"); // Obtener la entrada de longitud
   var ipgx = getElement("ipGx"); // Obtener la entrada de aceleración de la gravedad (si existe)
   if (ipgx) ipgx.innerHTML = "Aceleración"; // Establecer el texto para la entrada de aceleración de la gravedad
-  getElement("ipGa", "de la Gravedad:"); // Obtener el texto para la entrada de gravedad
   ipG = getElement("ipGb"); // Obtener la entrada de gravedad
-  getElement("ipGc", "m/s²"); // Obtener el texto para la unidad de aceleración de la gravedad
-  getElement("ipMa", "Masa:"); // Obtener el texto para la entrada de masa
   ipM = getElement("ipMb"); // Obtener la entrada de masa
-  getElement("ipMc", "kg"); // Obtener el texto para la unidad de masa
-  getElement("ipAa", "Amplitud:"); // Obtener el texto para la entrada de amplitud
   ipA = getElement("ipAb"); // Obtener la entrada de amplitud
-  getElement("ipAc", "°"); // Obtener el texto para la unidad de amplitud
   rbY = getElement("rbY"); // Obtener el botón de selección para elongación
   getElement("lbY", "Elongación"); // Obtener el texto para la selección de elongación
   rbY.checked = true; // Marcar el botón de selección para elongación por defecto
@@ -96,7 +97,7 @@ function start() {
   getElement("lbE", "Energía"); // Obtener el texto para la selección de energía
 
   // Establecer los valores iniciales de las entradas
-  l = 5; // Longitud inicial
+  l = 15; // Longitud inicial
   g = 9.81; // Gravedad inicial
   m = 1; // Masa inicial
   alpha0 = 10 * DEG; // Amplitud inicial (en radianes)
@@ -155,13 +156,7 @@ function enableInput(p) {
 
 // Función de reacción al hacer clic en el botón de restablecimiento
 function reactionReset() {
-  setButton2State(0); // Establecer el estado del botón 2 como restablecer
-  enableInput(true); // Habilitar las entradas de usuario
-  t = tU = 0; // Restablecer el tiempo transcurrido y el tiempo sin uso
-  on = false; // Establecer el estado del péndulo como inactivo
-  slow = cbSlow.checked; // Actualizar el estado de ralentización
-  reaction(); // Realizar la reacción necesaria
-  focus(ipL); // Establecer el foco en la entrada de longitud
+  window.location.reload(); // Recargar la página
 }
 
 
@@ -260,15 +255,18 @@ function newPath() {
 
 function rectangle(x, y, w, h, c) {
   if (c) ctx.fillStyle = c;
+  var rectX = x + (w - 500) / 2; // Calcular la coordenada x para centrar el rectángulo
   newPath();
-  ctx.fillRect(x, y, w, h);
-  ctx.strokeRect(x, y, w, h);
+  ctx.fillRect(rectX, y, 500, h);
+  ctx.strokeRect(rectX, y, 500, h);
 }
 
 function circle(x, y, r, c) {
   if (c) ctx.fillStyle = c;
+  var circleX = x; // Coordenada x del círculo
+  var circleY = y - r + 2; // Coordenada y del círculo (ajustada para centrar verticalmente)
   newPath();
-  ctx.arc(x, y, r, 0, 2 * Math.PI, true);
+  ctx.arc(circleX, circleY, r, 0, 2 * Math.PI, true);
   ctx.fill();
   ctx.stroke();
 }
@@ -277,19 +275,18 @@ function pendulum() {
   alpha = alpha0 * cosPhi;
   sinAlpha = Math.sin(alpha);
   cosAlpha = Math.cos(alpha);
-  px = ax + lPix * sinAlpha;
-  py = ay + lPix * cosAlpha;
+  var px = ax + lPix * sinAlpha; // Coordenada x del extremo del péndulo
+  var py = ay + lPix * cosAlpha; // Coordenada y del extremo del péndulo
   newPath();
   ctx.moveTo(ax, ay);
   ctx.lineTo(px, py);
   ctx.closePath();
   ctx.stroke();
-  circle(px, py, 5, colorBody);
+  var tamano=m*10;
+  circle(px, py, tamano, colorBody);
 }
 
 function clock(x, y) {
-  rectangle(x - 60, y - 16, 120, 32, colorClock1);
-  rectangle(x - 50, y - 10, 100, 20, colorClock2);
   ctx.fillStyle = "#ff0000";
   ctx.font = "normal normal bold 16px monospace";
   ctx.textAlign = "center";
@@ -297,7 +294,7 @@ function clock(x, y) {
   var s = (t - n * 1000).toFixed(3) + " " + "s";
   s = s.replace(".", decimalSeparator);
   while (s.length < 9) s = " " + s;
-  ctx.fillText(s, x, y + 5);
+  ctx.fillText(s, x, y + 400);
 }
 
 function arrow(x1, y1, x2, y2, w) {
@@ -525,6 +522,38 @@ function drawEnergy() {
   drawMomVal(eK, xD, yD2, colorVelocity);
 }
 
+function drawTransportador(x, y, radius) {
+  ctx.strokeStyle = "#000"; // Color del trazo
+  ctx.lineWidth = 2; // Grosor del trazo
+  
+  // Dibujar el círculo exterior del transportador
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, 1 * Math.PI);
+  ctx.stroke();
+  
+  // Dibujar marcas de medida y etiquetas
+  ctx.font = '10px Arial';
+  ctx.fillStyle = 'black';
+  ctx.textAlign = 'center';
+
+  for (let i = -90; i <= 90; i += 10) {
+      let anguloRadianes = ((90 - i) * Math.PI) / 180;
+      let startX = x + radius * Math.cos(anguloRadianes);
+      let startY = y + radius * Math.sin(anguloRadianes);
+      let endX = x + (radius + 10) * Math.cos(anguloRadianes);
+      let endY = y + (radius + 10) * Math.sin(anguloRadianes);
+
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.lineTo(endX, endY);
+      ctx.stroke();
+
+      ctx.fillText(i.toString() + '°', endX, endY + 10);
+  }
+}
+
+
+
 function paint() {
   ctx.fillStyle = colorBackground;
   ctx.fillRect(0, 0, width, height);
@@ -552,6 +581,7 @@ function paint() {
   s = s.replace(".", decimalSeparator);
   ctx.fillStyle = "#000000";
   alignText(s, 1, ax, height - 30);
+  drawTransportador(ax, ay, 150);
 }
 
 document.addEventListener("DOMContentLoaded", start, false);
