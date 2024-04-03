@@ -1,29 +1,8 @@
 // Variables globales
-var text02 = ["Comenzar", "Pausa", "Reanudar"]; // Textos para el botón 2 (varios estados)
-var text12 = "Energ&iacute;a"; // Texto para la entrada de energía"Elongación""Aceleración"
+var text02 = ["Aplicar", "Pausa", "Reanudar"]; // Textos para el botón 2 (varios estados)
 
 // Variables para los símbolos y unidades
 var decimalSeparator = ","; // Separador decimal
-var meter = "m"; // Metro
-var meterPerSecond2 = "m/s²"; // Metro por segundo al cuadrado
-var kilogram = "kg"; // Kilogramo
-var degree = "&deg;"; // Grado
-var second = "s"; // Segundo
-var meterUnicode = "m"; // Metro (Unicode)
-var meterPerSecond = "m/s"; // Metro por segundo
-var meterPerSecond2Unicode = "m/s²"; // Metro por segundo al cuadrado (Unicode)
-var newton = "N"; // Newton
-var joule = "J"; // Joules
-
-var symbolTime = "t";
-var symbolElongation = "s";
-var symbolVelocity = "v";
-var symbolAcceleration = "a";
-var symbolTangential = "tang";
-var symbolForce = "F";
-var symbolEnergy = "E";
-var symbolPotential = "pot";
-var symbolKinetic = "kin";
 
 // Colores utilizados en el lienzo
 var colorBackground = "#ffff00"; // Color de fondo
@@ -92,18 +71,18 @@ function start() {
   getElement("lbSlow", "Ralentizar"); // Obtener el texto para la casilla de verificación de ralentización
   getElement("ipLa", "Longitud:"); // Obtener el texto para la entrada de longitud
   ipL = getElement("ipLb"); // Obtener la entrada de longitud
-  getElement("ipLc", meter); // Obtener el texto para la unidad de longitud
+  getElement("ipLc", "m"); // Obtener el texto para la unidad de longitud
   var ipgx = getElement("ipGx"); // Obtener la entrada de aceleración de la gravedad (si existe)
   if (ipgx) ipgx.innerHTML = "Aceleración"; // Establecer el texto para la entrada de aceleración de la gravedad
   getElement("ipGa", "de la Gravedad:"); // Obtener el texto para la entrada de gravedad
   ipG = getElement("ipGb"); // Obtener la entrada de gravedad
-  getElement("ipGc", meterPerSecond2); // Obtener el texto para la unidad de aceleración de la gravedad
+  getElement("ipGc", "m/s²"); // Obtener el texto para la unidad de aceleración de la gravedad
   getElement("ipMa", "Masa:"); // Obtener el texto para la entrada de masa
   ipM = getElement("ipMb"); // Obtener la entrada de masa
-  getElement("ipMc", kilogram); // Obtener el texto para la unidad de masa
+  getElement("ipMc", "kg"); // Obtener el texto para la unidad de masa
   getElement("ipAa", "Amplitud:"); // Obtener el texto para la entrada de amplitud
   ipA = getElement("ipAb"); // Obtener la entrada de amplitud
-  getElement("ipAc", degree); // Obtener el texto para la unidad de amplitud
+  getElement("ipAc", "°"); // Obtener el texto para la unidad de amplitud
   rbY = getElement("rbY"); // Obtener el botón de selección para elongación
   getElement("lbY", "Elongación"); // Obtener el texto para la selección de elongación
   rbY.checked = true; // Marcar el botón de selección para elongación por defecto
@@ -114,7 +93,7 @@ function start() {
   rbF = getElement("rbF"); // Obtener el botón de selección para fuerza
   getElement("lbF", "Fuerza"); // Obtener el texto para la selección de fuerza
   rbE = getElement("rbE"); // Obtener el botón de selección para energía
-  getElement("lbE", text12); // Obtener el texto para la selección de energía
+  getElement("lbE", "Energía"); // Obtener el texto para la selección de energía
 
   // Establecer los valores iniciales de las entradas
   l = 5; // Longitud inicial
@@ -315,7 +294,7 @@ function clock(x, y) {
   ctx.font = "normal normal bold 16px monospace";
   ctx.textAlign = "center";
   var n = Math.floor(t / 1000);
-  var s = (t - n * 1000).toFixed(3) + " " + second;
+  var s = (t - n * 1000).toFixed(3) + " " + "s";
   s = s.replace(".", decimalSeparator);
   while (s.length < 9) s = " " + s;
   ctx.fillText(s, x, y + 5);
@@ -367,7 +346,7 @@ function alignText(s, t, x, y) {
 function horizontalAxis(x, y) {
   ctx.strokeStyle = "#000000";
   arrow(x - 20, y, x + 240, y);
-  alignText(symbolTime, 1, x + 230, y + 15);
+  alignText("t", 1, x + 230, y + 15);
   alignText("(s)", 1, x + 230, y + 27);
   var t0 = Math.ceil(tU);
   var x0 = Math.round(x + tPix * (t0 - tU));
@@ -446,7 +425,7 @@ function drawElongation() {
   var sMax = l * alpha0;
   var s = sMax * cosPhi;
   diagram(1, xD, yD1, sMax);
-  alignText(symbolElongation, 1, xD - 25, yD1 - 130);
+  alignText("s", 1, xD - 25, yD1 - 130);
   alignText("(m)", 1, xD - 25, yD1 - 118);
   ctx.beginPath();
   ctx.lineWidth = 3;
@@ -458,35 +437,35 @@ function drawElongation() {
   ctx.stroke();
   drawMomVal(s, xD, yD1, colorElongation);
   ctx.fillStyle = colorElongation;
-  writeValue("Elongación", s, meterUnicode, 3, xD, xD + 200, height - 50);
-  writeValue("(" + "Máximo", sMax, meterUnicode + ")", 3, xD, xD + 200, height - 30);
+  writeValue("Elongación", s, "m", 3, xD, xD + 200, height - 50);
+  writeValue("(" + "Máximo", sMax, "m" + ")", 3, xD, xD + 200, height - 30);
 }
 
 function drawVelocity() {
   var vMax = l * alpha0 * omega;
   var v = -vMax * sinPhi;
   diagram(2, xD, yD1, vMax);
-  alignText(symbolVelocity, 1, xD - 28, yD1 - 130);
+  alignText("v", 1, xD - 28, yD1 - 130);
   alignText("(m/s)", 1, xD - 28, yD1 - 118);
   ctx.strokeStyle = colorVelocity;
   arrowPendulum(v * yPix, alpha0 * cosPhi);
   drawMomVal(v, xD, yD1);
   ctx.fillStyle = colorVelocity;
-  writeValue("Velocidad", v, meterPerSecond, 3, xD, xD + 200, height - 50);
-  writeValue("(" + "Máximo", vMax, meterPerSecond + ")", 3, xD, xD + 200, height - 30);
+  writeValue("Velocidad", v, "m/s", 3, xD, xD + 200, height - 50);
+  writeValue("(" + "Máximo", vMax, "m/s" + ")", 3, xD, xD + 200, height - 30);
 }
 
 function drawAcceleration() {
   var aMax = l * alpha0 * omega * omega;
   var a = -aMax * cosPhi;
   diagram(3, xD, yD1, aMax);
-  centerTextIndex(symbolAcceleration, symbolTangential, xD - 30, yD1 - 130);
+  centerTextIndex("a", "tang", xD - 30, yD1 - 130);
   alignText("(m/s²)", 1, xD - 30, yD1 - 113);
   ctx.strokeStyle = colorAcceleration;
   arrowPendulum(a * yPix, alpha0 * cosPhi);
   drawMomVal(a, xD, yD1);
   ctx.fillStyle = colorAcceleration;
-  var mps2 = meterPerSecond2Unicode;
+  var mps2 = "m/s²";
   writeValue("Aceleración (Componente Tangencial)", a, mps2, 3, xD - 30, xD + 220, height - 50);
   writeValue("(" + "Máximo", aMax, mps2 + ")", 3, xD - 30, xD + 220, height - 30);
 }
@@ -495,14 +474,14 @@ function drawForce() {
   var fMax = m * l * alpha0 * omega * omega;
   var f = -fMax * cosPhi;
   diagram(3, xD, yD1, fMax);
-  centerTextIndex(symbolForce, symbolTangential, xD - 30, yD1 - 130);
+  centerTextIndex("F", "tang", xD - 30, yD1 - 130);
   alignText("(N)", 1, xD - 30, yD1 - 113);
   ctx.strokeStyle = colorForce;
   arrowPendulum(f * yPix, alpha0 * cosPhi);
   drawMomVal(f, xD, yD1);
   ctx.fillStyle = colorForce;
-  writeValue("Fuerza (Componente Tangencial)", f, newton, 3, xD - 30, xD + 220, height - 50);
-  writeValue("(" + "Máximo", fMax, newton + ")", 3, xD - 30, xD + 220, height - 30);
+  writeValue("Fuerza (Componente Tangencial)", f, "N", 3, xD - 30, xD + 220, height - 50);
+  writeValue("(" + "Máximo", fMax, "N" + ")", 3, xD - 30, xD + 220, height - 30);
 }
 
 function diagramEnergy(x, y, e) {
@@ -525,16 +504,16 @@ function drawEnergy() {
   var part = cosPhi * cosPhi;
   var eP = e * part, eK = e - eP;
   diagramEnergy(xD, yD2, e);
-  centerTextIndex(symbolEnergy, symbolPotential, xD - 30, yD2 - 125);
+  centerTextIndex("E", "pot", xD - 30, yD2 - 125);
   alignText("(J)", 1, xD - 30, yD2 - 108);
-  centerTextIndex(symbolEnergy, symbolKinetic, xD + 30, yD2 - 125);
+  centerTextIndex("E", "kin", xD + 30, yD2 - 125);
   alignText("(J)", 1, xD + 30, yD2 - 108);
   ctx.fillStyle = colorElongation;
-  writeValue("Energía Potencial", eP, joule, 3, xD, xD + 200, height - 70);
+  writeValue("Energía Potencial", eP, "J", 3, xD, xD + 200, height - 70);
   ctx.fillStyle = colorVelocity;
-  writeValue("Energía Cinética", eK, joule, 3, xD, xD + 200, height - 50);
+  writeValue("Energía Cinética", eK, "J", 3, xD, xD + 200, height - 50);
   ctx.fillStyle = "#000000";
-  writeValue("Energía Total", e, joule, 3, xD, xD + 200, height - 30);
+  writeValue("Energía Total", e, "J", 3, xD, xD + 200, height - 30);
   var dy = part * 100;
   rectangle(300, 205, 50, dy, colorElongation);
   if (part > 0.001 || on)
@@ -569,7 +548,7 @@ function paint() {
     case 3: drawForce(); break;
     case 4: drawEnergy(); break;
   }
-  var s = "Período de Oscilación:  " + tPer.toPrecision(3) + " " + second;
+  var s = "Período de Oscilación:  " + tPer.toPrecision(3) + " " + "s";
   s = s.replace(".", decimalSeparator);
   ctx.fillStyle = "#000000";
   alignText(s, 1, ax, height - 30);

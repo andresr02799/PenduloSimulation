@@ -238,16 +238,6 @@ button {
     color: #0000ff;
   }
   
-  /* Encabezado de primer orden */
-  h1 {
-    border: 10px solid #0000ff;
-    padding: 5px;
-    background-color: #ffff00;
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-  }
-  
   /* Encabezado de segundo orden */
   h2 {
     padding: 5px 0px 5px 0px;
