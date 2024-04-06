@@ -341,44 +341,49 @@ function alignText(s, t, x, y) {
 }
 
 function horizontalAxis(x, y) {
+  var axisLength = 400; // Nuevo valor de longitud del eje horizontal
   ctx.strokeStyle = "#000000";
-  arrow(x - 20, y, x + 240, y);
-  alignText("t", 1, x + 230, y + 15);
-  alignText("(s)", 1, x + 230, y + 27);
+  arrow(x - 20, y, x + axisLength, y); // Utiliza el nuevo valor de longitud del eje
+  alignText("t", 1, x + axisLength, y + 30); // Ajusta la posición del texto "t"
+  alignText("(s)", 1, x + axisLength, y + 47); // Ajusta la posición del texto "(s)"
   var t0 = Math.ceil(tU);
   var x0 = Math.round(x + tPix * (t0 - tU));
   for (i = 0; i <= 10; i++) {
-    var xs = x0 + i * tPix;
+    var xs = x0 + (i / 10) * (axisLength - 10); // Ajusta el cálculo de la posición de las marcas de graduación
     ctx.moveTo(xs, y - 3); ctx.lineTo(xs, y + 3);
-    if (xs >= x + 5 && xs <= x + 215
-      && (t0 + i <= 100 || (t0 + i) % 2 == 0))
+    if (xs >= x + 5 && xs <= x + axisLength - 15
+      && (t0 + i) <= 100 || (t0 + i) % 2 == 0)
       alignText("" + (t0 + i), 1, xs, y + 13);
   }
   ctx.stroke();
 }
 
 function verticalAxis(x, y, yLow, yHigh, maxSI) {
+  var axisLengthV = 150; //valor de longitud del eje vertical
   var pot10 = Math.pow(10, Math.floor(Math.log(maxSI) / Math.LN10));
   var q = maxSI / pot10;
   var n;
   if (q > 5) n = 10; else if (q > 2) n = 5; else n = 2;
   ctx.strokeStyle = "#000000";
-  arrow(x, yLow, x, yHigh);
+  // Ajusta la longitud del eje vertical utilizando la variable axisLength
+  arrow(x, yLow - axisLengthV/2, x, yHigh);
   var n0 = (nrSize < 4 ? -n : 0);
   ctx.beginPath();
   for (i = n0; i <= n; i++) {
-    var ys = y - i * 100 / n;
+    var ys = y - i * axisLengthV / n;
     ctx.moveTo(x - 3, ys); ctx.lineTo(x + 3, ys);
     var s = Number(i * pot10).toPrecision(1);
     if (Math.abs(i * pot10) >= 10)
       s = "" + Math.round(i * pot10);
     s = s.replace(".", decimalSeparator);
     if ((n < 10 || i % 2 == 0) && i != 0)
-      alignText(s, 2, x - 3, ys + 4);
+      alignText(s, 2, x - 20, ys + 4); // Ajusta la posición del texto a la izquierda del eje
   }
   ctx.stroke();
-  yPix = 100 / n / pot10;
+  yPix = axisLengthV / n / pot10;
 }
+
+
 
 function sinus(x, y, per, ampl, xMin, xMax) {
   var omega = 2 * Math.PI / per;
@@ -422,8 +427,8 @@ function drawElongation() {
   var sMax = l * alpha0;
   var s = sMax * cosPhi;
   diagram(1, xD, yD1, sMax);
-  alignText("s", 1, xD - 25, yD1 - 130);
-  alignText("(m)", 1, xD - 25, yD1 - 118);
+  alignText("s", 1, xD - 50, yD1 - 130);
+  alignText("(m)", 1, xD - 50, yD1 - 118);
   ctx.beginPath();
   ctx.lineWidth = 3;
   ctx.strokeStyle = colorElongation;
@@ -442,8 +447,8 @@ function drawVelocity() {
   var vMax = l * alpha0 * omega;
   var v = -vMax * sinPhi;
   diagram(2, xD, yD1, vMax);
-  alignText("v", 1, xD - 28, yD1 - 130);
-  alignText("(m/s)", 1, xD - 28, yD1 - 118);
+  alignText("v", 1, xD - 50, yD1 - 130);
+  alignText("(m/s)", 1, xD - 50, yD1 - 118);
   ctx.strokeStyle = colorVelocity;
   arrowPendulum(v * yPix, alpha0 * cosPhi);
   drawMomVal(v, xD, yD1);
@@ -456,8 +461,8 @@ function drawAcceleration() {
   var aMax = l * alpha0 * omega * omega;
   var a = -aMax * cosPhi;
   diagram(3, xD, yD1, aMax);
-  centerTextIndex("a", "tang", xD - 30, yD1 - 130);
-  alignText("(m/s²)", 1, xD - 30, yD1 - 113);
+  centerTextIndex("a", "tang", xD - 50, yD1 - 130);
+  alignText("(m/s²)", 1, xD - 50, yD1 - 113);
   ctx.strokeStyle = colorAcceleration;
   arrowPendulum(a * yPix, alpha0 * cosPhi);
   drawMomVal(a, xD, yD1);
@@ -471,8 +476,8 @@ function drawForce() {
   var fMax = m * l * alpha0 * omega * omega;
   var f = -fMax * cosPhi;
   diagram(3, xD, yD1, fMax);
-  centerTextIndex("F", "tang", xD - 30, yD1 - 130);
-  alignText("(N)", 1, xD - 30, yD1 - 113);
+  centerTextIndex("F", "tang", xD - 50, yD1 - 130);
+  alignText("(N)", 1, xD - 50, yD1 - 113);
   ctx.strokeStyle = colorForce;
   arrowPendulum(f * yPix, alpha0 * cosPhi);
   drawMomVal(f, xD, yD1);
@@ -501,10 +506,12 @@ function drawEnergy() {
   var part = cosPhi * cosPhi;
   var eP = e * part, eK = e - eP;
   diagramEnergy(xD, yD2, e);
-  centerTextIndex("E", "pot", xD - 30, yD2 - 125);
-  alignText("(J)", 1, xD - 30, yD2 - 108);
+  centerTextIndex("E","P-K", xD - 50, yD2 - 125);
+  alignText("(J)", 1, xD - 50, yD2 - 108);
+  /*
   centerTextIndex("E", "kin", xD + 30, yD2 - 125);
   alignText("(J)", 1, xD + 30, yD2 - 108);
+  */
   ctx.fillStyle = colorElongation;
   writeValue("Energía Potencial", eP, "J", 3, xD, xD + 200, height - 70);
   ctx.fillStyle = colorVelocity;
