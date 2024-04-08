@@ -680,15 +680,16 @@ function drawEnergy() {
 
   // Dibuja las barras de energía potencial y cinética
   var dy = part * 100;
-  rectangle(300, 205, 50, dy, colorElongation);
+  rectangle(900, 505, 50, dy, colorElongation);
   if (part > 0.001 || on)
-    alignText("Energía Potencial", 0, 360, 220);
-  rectangle(300, 205 + dy, 50, 100 - dy, colorVelocity);
+    //alignText("Energía Potencial", 0, 360, 220);
+  rectangle(900, 505 + dy, 50, 100 - dy, colorVelocity);
   if (part < 0.999 || on)
-    alignText("Energía Cinética", 0, 360, 300);
+    //alignText("Energía Cinética", 0, 360, 300);
   // Dibuja los puntos que representan la energía potencial y cinética
   drawMomVal(eP, xD, yD2, colorElongation);
   drawMomVal(eK, xD, yD2, colorVelocity);
+
 }
 
 function drawTransportador(x, y, radius) {
