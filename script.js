@@ -26,10 +26,12 @@ var canvas, ctx; // Lienzo y contexto
 var width, height; // Ancho y alto del lienzo
 var bu1, bu2; // Botones
 var cbSlow; // Casilla de verificación de ralentización
+var cbAmort; // Casilla de verificación de amortiguados
 var ipL, ipG, ipM, ipA, ipAm, ipMasb, posMas, radMas; // Entradas de longitud, gravedad, masa y amplitud
 var rbY, rbV, rbA, rbF, rbE; // Botones de selección
 var on; // Estado del péndulo (activo o inactivo)
 var slow; // Estado de ralentización
+var unlock; // Estado de activacion de campo amortiguacion
 var t0; // Tiempo de inicio del programa
 var t; // Tiempo transcurrido
 var tU; // Tiempo transcurrido sin considerar los primeros 5 segundos
@@ -79,6 +81,9 @@ function start() {
   bu1 = getElement("bu1", "Restablecer"); // Obtener el botón 1
   bu2 = getElement("bu2", text02[0]); // Obtener el botón 2
   bu2.state = 0; // Establecer el estado inicial del botón 2
+  cbAmort = getElement("cbAmort"); // Obtener la casilla de verificación de amortiguados
+  cbAmort.checked = false; // Desmarcar la casilla de verificación de amortiguados
+  getElement("lbAmort", "Amortiguados"); // Obtener el texto para la casilla de verificación de amortiguados
   cbSlow = getElement("cbSlow"); // Obtener la casilla de verificación de ralentización
   cbSlow.checked = false; // Desmarcar la casilla de verificación de ralentización
   getElement("lbSlow", "Ralentizar"); // Obtener el texto para la casilla de verificación de ralentización
@@ -118,6 +123,7 @@ function start() {
   focus(ipL); // Establecer el foco en la entrada de longitud
   on = false; // Inicializar el estado del péndulo como inactivo
   slow = false; // Inicializar el estado de ralentización como falso
+  ipAm.disabled = true; // Inicializar el estado de amortiguacion como bloqueado
   t = 0; // Inicializar el tiempo transcurrido como cero
   t0 = new Date(); // Obtener la hora actual
   setInterval(paint, 40); // Establecer un intervalo de repintado
@@ -125,6 +131,7 @@ function start() {
   // Asignar eventos a los elementos del DOM
   bu1.onclick = reactionReset; // Asignar evento de clic para el botón 1 (restablecer)
   bu2.onclick = reactionStart; // Asignar evento de clic para el botón 2 (comenzar/pausa)
+  cbAmort.onclick = reactionUnlock; // Asignar evento de clic para la casilla de verificación de ralentización
   cbSlow.onclick = reactionSlow; // Asignar evento de clic para la casilla de verificación de ralentización
   ipL.onkeydown = reactionEnter; // Asignar evento de tecla presionada para la entrada de longitud
   ipG.onkeydown = reactionEnter; // Asignar evento de tecla presionada para la entrada de gravedad
@@ -197,6 +204,15 @@ function reactionStart() {
 // Función de reacción al cambiar el estado de la casilla de verificación de ralentización
 function reactionSlow() {
   slow = cbSlow.checked; // Actualizar el estado de ralentización
+}
+
+// Función de reacción al cambiar el estado de la casilla de verificación de amortiguados
+function reactionUnlock() {
+  if (cbAmort.checked) {
+    ipAm.disabled = false; // Si cbAmort está marcado, habilitar el campo de entrada de amortiguación
+  } else {
+    ipAm.disabled = true; // Si cbAmort no está marcado, deshabilitar el campo de entrada de amortiguación
+  }
 }
 
 // Función de reacción a eventos de entrada de usuario
