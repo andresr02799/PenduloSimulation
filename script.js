@@ -339,7 +339,7 @@ function pendulum() {
   // Dibuja el trazo del camino en el lienzo
   ctx.stroke();
   // Calcula el tamaño del cuerpo del péndulo
-  var tamano = m * 10;
+  var tamano = r * 5;
   // Dibuja un círculo para representar el cuerpo del péndulo en el extremo
   circle(px, py, tamano, colorBody);
 }
@@ -739,6 +739,12 @@ function paint() {
   s = s.replace(".", decimalSeparator);
   ctx.fillStyle = "#000000";
   alignText(s, 1, ax, height - 30);
+  // Calcula omega y lo formatea según sea necesario
+  var omegaFormatted = omega.toPrecision(3).replace(".", decimalSeparator);
+  // Escribe el valor de omega
+  var sOmega = "Valor de Omega: " + omegaFormatted;
+  sOmega = sOmega.replace(".", decimalSeparator);
+  alignText(sOmega, 1, ax, height - 10); // Coloca el texto debajo del período
   // Dibuja el transportador
   drawTransportador(ax, ay, 150);
 }
