@@ -248,11 +248,15 @@ function reactionRadioButton() {
 
 // Función para realizar los cálculos necesarios
 function calculation() {
-  //omega = Math.sqrt(g / l); // Calcular la frecuencia angular
+  if (document.getElementById("ipAm").disabled) {
+    omega = Math.sqrt(((masaBarra * g * (l / 2)) + (m * g * posicionMasa)) / ((1 / 3) * (masaBarra) * (l ** 2)) + ((1 / 2) * (m) * (r ** 2)) + ((m) * (posicionMasa ** 2)));
+  } else {
+    omega = 1;
+  }
   tPer = 2 * Math.PI / omega; // Calcular el período
   lPix = 25 * l; // Convertir la longitud a píxeles
-  omega = Math.sqrt(((masaBarra * g * (l / 2)) + (m * g * posicionMasa)) / ((1 / 3) * (masaBarra) * (l ** 2)) + ((1 / 2) * (m) * (r ** 2)) + ((m) * (posicionMasa ** 2)));
 }
+
 
 // Función para convertir un número en una cadena con el formato deseado
 function ToString(n, d, fix) {
