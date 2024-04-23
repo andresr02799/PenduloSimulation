@@ -4,15 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MAS</title>
-  <link rel="stylesheet" href="./styles/stylesAmortiguados.css">
+  <title>FORZADOS</title>
+  <link rel="stylesheet" href="./styles/stylesForzados.css">
 </head>
 
 <body>
   <div id="total">
     <div id="panel">
 
-      <h1>AMORTIGUADOS</h1>
+      <h1>FORZADOS</h1>
 
       <div id="labelInput">
         <label for="longitud">Longitud</label>
@@ -51,15 +51,20 @@
       </div>
 
       <div id="labelInput">
-        <label for="amortiguacion">Amortiguacion</label>
-        <input type="text" id="ipAm">
-        <label>A</label>
-      </div>
-
-      <div id="labelInput">
         <label for="fuerza">Fuerza</label>
         <input type="text" id="ipFuer">
         <label>N</label>
+      </div>
+
+      <div id="labelInput">
+        <input type="checkbox" id="cbAmort" name="cbAmort" value="">
+        <label for="cbAmort" id="lbAmort"></label>
+      </div>
+
+      <div id="labelInput">
+        <label for="amortiguacion">Amortiguacion</label>
+        <input type="text" id="ipAm">
+        <label>kg/s</label>
       </div>
 
       <div id="labelInput">

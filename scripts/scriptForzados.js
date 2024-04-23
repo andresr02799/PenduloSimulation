@@ -26,21 +26,23 @@ var canvas, ctx; // Lienzo y contexto
 var width, height; // Ancho y alto del lienzo
 var bu1, bu2; // Botones
 var cbSlow; // Casilla de verificación de ralentización
+var cbAmort; // Casilla de verificación de amortiguados
 var ipL, ipG, ipM, ipA, ipAm, ipMasb, radMas, ipFuer; // Entradas de longitud, gravedad, masa y amplitud
 var rbY, rbV, rbA, rbF, rbE; // Botones de selección
 var on; // Estado del péndulo (activo o inactivo)
 var slow; // Estado de ralentización
+var unlock; // Estado de activacion de campo amortiguacion
 var t0; // Tiempo de inicio del programa
 var t; // Tiempo transcurrido
 var tU; // Tiempo transcurrido sin considerar los primeros 5 segundos
 var l; // Longitud del péndulo
-var amortiguacion; //amortiguacion
-var fuerzaN; //Fuerza aplicada
 var lPix; // Longitud del péndulo en píxeles
 var g; // Aceleración de la gravedad
 var m; // masa
 var r; // radio de la masa
+var amortiguacion; // Amortiguacion
 var masaBarra; // Masa de la barra
+var posicionMasa; // Posicion de la masa
 var omega; // Frecuencia angular
 var tPer; // Período de oscilación
 var phi; // Ángulo de oscilación
@@ -79,6 +81,9 @@ function start() {
   bu1 = getElement("bu1", "Restablecer"); // Obtener el botón 1
   bu2 = getElement("bu2", text02[0]); // Obtener el botón 2
   bu2.state = 0; // Establecer el estado inicial del botón 2
+  cbAmort = getElement("cbAmort"); // Obtener la casilla de verificación de amortiguados
+  cbAmort.checked = false; // Desmarcar la casilla de verificación de amortiguados
+  getElement("lbAmort", "Amortiguados"); // Obtener el texto para la casilla de verificación de amortiguados
   cbSlow = getElement("cbSlow"); // Obtener la casilla de verificación de ralentización
   cbSlow.checked = false; // Desmarcar la casilla de verificación de ralentización
   getElement("lbSlow", "Ralentizar"); // Obtener el texto para la casilla de verificación de ralentización
@@ -87,10 +92,10 @@ function start() {
   if (ipgx) ipgx.innerHTML = "Aceleración"; // Establecer el texto para la entrada de aceleración de la gravedad
   ipG = getElement("ipGb"); // Obtener la entrada de gravedad
   ipM = getElement("ipMb"); // Obtener la entrada de masa
-  radMas = getElement('radMas'); //Obtener la entrada del radio de la masa
+  radMas = getElement('radMas');
   ipA = getElement("ipAb"); // Obtener la entrada de amplitud
-  ipAm = getElement("ipAm"); // Obtener la entrada de amortiguacion
   ipFuer = getElement("ipFuer"); // Obtener la entrada de fuerza
+  ipAm = getElement("ipAm"); // Obtener la entrada de amortiguacion
   ipMasb = getElement("ipMasb"); // Obtener la entrada de la masa de la barra
   rbY = getElement("rbY"); // Obtener el botón de selección para elongación
   getElement("lbY", "Elongación"); // Obtener el texto para la selección de elongación
@@ -108,16 +113,18 @@ function start() {
   l = 15; // Longitud inicial
   g = 9.81; // Gravedad inicial
   m = 1; // Masa inicial
-  r = 2; // radio inicial
-  amortiguacion = 0; //amortiguacion inicial
+  r = 2;
   alpha0 = 10 * deg; // Amplitud inicial (en radianes)
+  amortiguacion = 0;
   masaBarra = 1;
+  posicionMasa = l;
   fuerzaN = 0;
   updateInput(); // Actualizar las entradas con los valores iniciales
   calculation(); // Realizar los cálculos iniciales
   focus(ipL); // Establecer el foco en la entrada de longitud
   on = false; // Inicializar el estado del péndulo como inactivo
   slow = false; // Inicializar el estado de ralentización como falso
+  ipAm.disabled = true; // Inicializar el estado de amortiguacion como bloqueado
   t = 0; // Inicializar el tiempo transcurrido como cero
   t0 = new Date(); // Obtener la hora actual
   setInterval(paint, 40); // Establecer un intervalo de repintado
@@ -125,6 +132,7 @@ function start() {
   // Asignar eventos a los elementos del DOM
   bu1.onclick = reactionReset; // Asignar evento de clic para el botón 1 (restablecer)
   bu2.onclick = reactionStart; // Asignar evento de clic para el botón 2 (comenzar/pausa)
+  cbAmort.onclick = reactionUnlock; // Asignar evento de clic para la casilla de verificación de ralentización
   cbSlow.onclick = reactionSlow; // Asignar evento de clic para la casilla de verificación de ralentización
   ipL.onkeydown = reactionEnter; // Asignar evento de tecla presionada para la entrada de longitud
   ipG.onkeydown = reactionEnter; // Asignar evento de tecla presionada para la entrada de gravedad
@@ -132,7 +140,7 @@ function start() {
   radMas.onkeydown = reactionEnter; // Asignar evento de tecla presionada para la entrada de radio de masa
   ipA.onkeydown = reactionEnter; // Asignar evento de tecla presionada para la entrada de amplitud
   ipAm.onkeydown = reactionEnter; // Asignar evento de tecla presionada para la entrada de amortiguacion
-  ipFuer.onkeydown = reactionEnter; // Asignar evento de tecla presionada para la entrada de fuerza
+  ipFuer.onkeydown = reactionEnter; // Asignar evento de tecla presionada para la entrada de la amortiguacion
   ipMasb.onkeydown = reactionEnter; // Asignar evento de tecla presionada para la entrada de la masa de la barra
   ipL.onblur = reaction; // Asignar evento de pérdida de foco para la entrada de longitud
   ipG.onblur = reaction; // Asignar evento de pérdida de foco para la entrada de gravedad
@@ -140,7 +148,7 @@ function start() {
   radMas.onblur = reaction; // Asignar evento de perdida de foco para la entrada de radio de masa
   ipA.onblur = reaction; // Asignar evento de pérdida de foco para la entrada de amplitud
   ipAm.onblur = reaction; // Asignar evento de pérdida de foco para la entrada de amortiguacion
-  ipFuer.onblur = reaction; // Asignar evento de perdida de foco para la entrada de fuerza
+  ipFuer.onblur = reaction; // Asignar evento de perdida de foco para la entrada de amortiguacion
   ipMasb.onblur = reaction; // Asignar evento de pérdida de foco para la entrada de la masa de la barra
   rbY.onclick = reactionRadioButton; // Asignar evento de clic para el botón de selección de elongación
   rbV.onclick = reactionRadioButton; // Asignar evento de clic para el botón de selección de velocidad
@@ -199,6 +207,15 @@ function reactionSlow() {
   slow = cbSlow.checked; // Actualizar el estado de ralentización
 }
 
+// Función de reacción al cambiar el estado de la casilla de verificación de amortiguados
+function reactionUnlock() {
+  if (cbAmort.checked) {
+    ipAm.disabled = false; // Si cbAmort está marcado, habilitar el campo de entrada de amortiguación
+  } else {
+    ipAm.disabled = true; // Si cbAmort no está marcado, deshabilitar el campo de entrada de amortiguación
+  }
+}
+
 // Función de reacción a eventos de entrada de usuario
 function reaction() {
   input(); // Obtener las entradas de usuario
@@ -234,7 +251,7 @@ function calculation() {
   //omega = Math.sqrt(g / l); // Calcular la frecuencia angular
   tPer = 2 * Math.PI / omega; // Calcular el período
   lPix = 25 * l; // Convertir la longitud a píxeles
-  omega = Math.sqrt(((masaBarra * g * (l / 2)) + (m * g * l)) / ((1 / 3) * (masaBarra) * (l ** 2)) + ((1 / 2) * (m) * (r ** 2)) + ((m) * (l ** 2)));
+  omega = Math.sqrt(((masaBarra * g * (l / 2)) + (m * g * posicionMasa)) / ((1 / 3) * (masaBarra) * (l ** 2)) + ((1 / 2) * (m) * (r ** 2)) + ((m) * (posicionMasa ** 2)));
 }
 
 // Función para convertir un número en una cadena con el formato deseado
@@ -262,9 +279,9 @@ function input() {
   g = inputNumber(ipG, 2, true, 1, 50); // Obtener y procesar la entrada de gravedad
   m = inputNumber(ipM, 2, true, 0.01, 10); // Obtener y procesar la entrada de masa
   r = inputNumber(radMas, 2, true, 0, 90); // Obtener y procesar la entrada del radio de la masa
-  alpha0 = inputNumber(ipA, 2, true, 0.1, 90) * deg; // Obtener y procesar la entrada de amplitud en radianes
-  amortiguacion = inputNumber(ipAm, 2, true, 0, 50); // Obtener y procesar la entrada de amortiguacion
-  fuerzaN = inputNumber(ipFuer, 2, true, 0, 50); // Obtener y procesar la entrada de fuerza
+  alpha0 = inputNumber(ipA, 2, true, 1, 90) * deg; // Obtener y procesar la entrada de amplitud en radianes
+  amortiguacion = inputNumber(ipAm, 2, true, 0, 10); // Obtener y procesar la entrada de amortiguación
+  fuerzaN = inputNumber(ipFuer, 2, true, 0, 50);
   masaBarra = inputNumber(ipMasb, 2, true, 0.01, 10); // Obtener y procesar la entrada de masa de la barra
 }
 
@@ -276,7 +293,7 @@ function updateInput() {
   radMas.value = ToString(r, 2, true); // Establecer el valor del radio de la masa
   ipA.value = ToString(alpha0 / deg, 2, true); // Establecer el valor de la entrada de amplitud en grados
   ipAm.value = ToString(amortiguacion, 2, true); // Establecer el valor de la entrada de amortiguacion
-  ipFuer.value = ToString(fuerzaN, 2, true); //Establecer el valor de la entrada de fuerza
+  ipFuer.value = ToString(fuerzaN, 2, true); // Establecer el valor de la entrada de la fuerza
   ipMasb.value = ToString(masaBarra, 2, true); // Establecer el valor de la entrada de masa de la barra
 }
 
