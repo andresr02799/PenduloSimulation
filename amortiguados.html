@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAS</title>
+  <link rel="stylesheet" href="./styles/stylesAmortiguados.css">
+</head>
+
+<body>
+  <div id="total">
+    <div id="panel">
+
+      <h1>AMORTIGUADOS</h1>
+
+      <div id="labelInput">
+        <label for="longitud">Longitud</label>
+        <input type="text" id="longitudInput">
+        <label>m</label>
+      </div>
+
+      <div id="labelInput">
+        <label for="gravedad">Gravedad</label>
+        <input type="text" id="ipGb">
+        <label>m/s²</label>
+      </div>
+
+      <div id="labelInput">
+        <label for="radioMasa">Radio Masa</label>
+        <input type="text" id="radMas">
+        <label>m</label>
+      </div>
+
+      <div id="labelInput">
+        <label for="masa">Masa</label>
+        <input type="text" id="ipMb">
+        <label>kg</label>
+      </div>
+
+      <div id="labelInput">
+        <label for="angulo">Angulo</label>
+        <input type="text" id="ipAb">
+        <label>°</label>
+      </div>
+
+      <div id="labelInput">
+        <label for="masaBarra">Masa Barra</label>
+        <input type="text" id="ipMasb">
+        <label>kg</label>
+      </div>
+
+      <div id="labelInput">
+        <label for="amortiguacion">Amortiguacion</label>
+        <input type="text" id="ipAm">
+        <label>A</label>
+      </div>
+
+      <div id="labelInput">
+        <input type="checkbox" id="cbSlow" name="cbSlow" value="">
+        <label for="cbSlow" id="lbSlow"></label>
+      </div>
+
+      <div id="divBotones">
+        <button id="bu2"></button>
+        <button id="bu1"></button>
+      </div>
+
+      <div style="top: 250px;">
+        <input type="radio" id="rbY" name="bg" value="">
+        <label id="lbY" for="rbY"></label>
+      </div>
+
+      <div style="top: 275px;">
+        <input type="radio" id="rbV" name="bg" value="">
+        <label id="lbV" for="rbV"></label>
+      </div>
+
+      <div style="top: 300px;">
+        <input type="radio" id="rbA" name="bg" value="">
+        <label id="lbA" for="rbA"></label>
+      </div>
+
+      <div style="top: 325px;">
+        <input type="radio" id="rbF" name="bg" value="">
+        <label id="lbF" for="rbF"></label>
+      </div>
+
+      <div style="top: 350px;">
+        <input type="radio" id="rbE" name="bg" value="">
+        <label id="lbE" for="rbE"></label>
+      </div>
+
+      <div style="top: 390px;">
+        <span class="pos1" id="author"></span>
+      </div>
+    </div>
+    <div id="canvas"><canvas id="cv" width=540 height=420>Este navegador no soporta CANVAS</canvas></div>
+  </div>
+  <script src="./scripts/scriptAmortiguados.js"></script>
+</body>
+
+</html>

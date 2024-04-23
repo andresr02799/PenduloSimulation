@@ -1,0 +1,104 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fff;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+/* Toda la aplicación */
+#total {
+  display: flex;
+}
+
+/* Área de dibujo */
+#canvas {
+  flex-grow: 8; /* Ocupa 8/10 del espacio disponible */
+  flex-basis: 0; /* Importante para que flex-grow funcione correctamente */
+  z-index: 3;
+  padding-top: 40px;
+}
+
+/* Panel de Controles */
+#panel {
+  flex-grow: 2; /* Ocupa 2/10 del espacio disponible */
+  flex-basis: 0; /* Importante para que flex-grow funcione correctamente */
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 40px;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  z-index: 3;
+}
+
+#divBotones {
+  display: flex;
+  justify-content: center;
+  margin: 30px;
+}
+
+/* Estilos para los botones */
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+button:hover {
+  background-color: blue;
+  padding: 9px 19px;
+}
+
+/* Estilos para el botón "RESTABLECER" */
+#bu1 {
+  background-color: #dc3545;
+}
+
+/* Alinear los elementos input dentro de los contenedores labelInput */
+#labelInput {
+  display: flex;
+  align-items: center; /* Alinea verticalmente todos los elementos hijos */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+/* Estilo específico para los labels dentro de labelInput */
+#labelInput label {
+  margin-right: 5px; /* Espacio entre el label y el input */
+}
+
+/* Estilo para los input dentro de labelInput */
+#labelInput input[type="text"] {
+  padding: 5px;
+  margin-right: 5px; /* Espacio entre inputs */
+}
+
+/* Casilla de verificación */
+input[type="checkbox"] {
+  margin-left: 10px;
+  border-radius: 0px;
+}
+
+/* Botón de radio */
+input[type="radio"] {
+  margin-left: 10px;
+}
+
+/* Texto para casilla de verificación o botón de radio */
+label {
+  margin-left: 5px;
+  vertical-align: 2px;
+}
+
+h1 {
+  text-align: center;
+}
