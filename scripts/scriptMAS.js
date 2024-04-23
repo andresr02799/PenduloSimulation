@@ -223,7 +223,7 @@ function calculation() {
   tPer = 2 * Math.PI / omega; // Calcular el período
   lPix = 25 * l; // Convertir la longitud a píxeles
   //omega = Math.sqrt(((masaBarra * g * (l / 2)) + (m * g * posicionMasa)) / ((1 / 3) * (masaBarra) * (l ** 2)) + ((1 / 2) * (m) * (r ** 2)) + ((m) * (posicionMasa ** 2)));
-  omega = Math.sqrt(((masaBarra * g * (l / 2)) + (m * g * l)) / ((1 / 3) * (masaBarra) * (l ** 2)) + ((1 / 2) * (m) * (r ** 2)) + ((m) * (l ** 2)));
+  omega = Math.sqrt(((masaBarra * g * (l / 2)) + (m * g * l)) / (((1 / 3) * (masaBarra) * (l ** 2)) + ((1 / 2) * (m) * (r ** 2)) + ((m) * (l ** 2))));
 }
 
 // Función para convertir un número en una cadena con el formato deseado
